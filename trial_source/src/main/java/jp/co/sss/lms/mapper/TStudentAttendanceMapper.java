@@ -65,4 +65,10 @@ public interface TStudentAttendanceMapper {
 	 */
 	Boolean update(TStudentAttendance tStudentAttendance);
 
+	
+	Integer countLmsUserId(@Param("lmsUserId") Integer lmsUserId,
+			@Param("trainingDate") Date trainingDate, @Param("deleteFlg") Short deleteFlg);
+
+
+
 }

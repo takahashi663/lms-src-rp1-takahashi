@@ -46,9 +46,13 @@ public class AttendanceController {
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
+		
+
 
 		return "attendance/detail";
 	}
+	
+	
 
 	/**
 	 * 勤怠管理画面 『出勤』ボタン押下

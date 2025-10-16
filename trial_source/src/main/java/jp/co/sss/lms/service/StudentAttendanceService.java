@@ -68,6 +68,7 @@ public class StudentAttendanceService {
 			if (statusEnum != null) {
 				dto.setStatusDispName(statusEnum.name);
 			}
+			
 		}
 
 		return attendanceManagementDtoList;
@@ -332,6 +333,24 @@ public class StudentAttendanceService {
 		}
 		// 完了メッセージ
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
+		
+		
+	}
+	//勤怠情報（受講生入力）取得（LMSユーザーID＆日付）してカウント
+	public boolean countLmsUserId(TStudentAttendance tStudentAttendance){
+		Date trainingDate = attendanceUtil.getTrainingDate();
+		Integer count = tStudentAttendanceMapper.countLmsUserId(loginUserDto.getLmsUserId(), trainingDate,
+				Constants.DB_FLG_FALSE);
+		return count != null && count > 0;
+	
+		}
+			
+		
+		
 	}
 
-}
+	
+	
+
+	
+
