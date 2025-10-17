@@ -6,6 +6,25 @@
 <title>勤怠情報変更｜LMS</title>
 </head>
 <body>
+	
+<form id="attendanceForm">
+	<input type="hidden" id="hasUnentered" name="hasUnentered" th:value="${hasUnentered}">
+</form>
+
+<script>
+  console.log("JSは実行されています");
+  window.addEventListener('load', () => {
+    console.log("loadイベント発火");
+    const hiddenValue = document.getElementById('hasUnentered').value;
+    console.log("hiddenValue =", hiddenValue);
+    if (hiddenValue === 'true') {
+      alert("過去日に未入力の勤怠があります。");
+    }
+  });
+</script>
+
+
+	
 
 	<!-- 完了メッセージ -->
 	<th:block th:if="${not #strings.isEmpty(message)}" id="message">
@@ -87,6 +106,10 @@
 			return hours + ':' + minutes;
 		}
 	</script>
+	
+
+	
+	
 
 </body>
 </html>

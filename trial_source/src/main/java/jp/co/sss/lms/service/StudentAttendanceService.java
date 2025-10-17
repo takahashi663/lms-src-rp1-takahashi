@@ -337,17 +337,20 @@ public class StudentAttendanceService {
 		
 	}
 	//勤怠情報（受講生入力）取得（LMSユーザーID＆日付）してカウント
-	public boolean countLmsUserId(TStudentAttendance tStudentAttendance){
+	public boolean countLmsUserId(){
 		Date trainingDate = attendanceUtil.getTrainingDate();
-		Integer count = tStudentAttendanceMapper.countLmsUserId(loginUserDto.getLmsUserId(), trainingDate,
+		Integer result = tStudentAttendanceMapper.countLmsUserId(loginUserDto.getLmsUserId(), trainingDate,
 				Constants.DB_FLG_FALSE);
-		return count != null && count > 0;
+	return result != null && result> 0;
 	
-		}
+	}
+}
+
+	
 			
 		
 		
-	}
+	
 
 	
 	

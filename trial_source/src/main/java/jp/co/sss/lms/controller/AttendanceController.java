@@ -16,6 +16,8 @@ import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
 import jp.co.sss.lms.util.Constants;
 
+
+
 /**
  * 勤怠管理コントローラ
  * 
@@ -29,6 +31,7 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
+	
 
 	/**
 	 * 勤怠管理画面 初期表示
@@ -47,8 +50,7 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		
-
-
+		
 		return "attendance/detail";
 	}
 	
@@ -147,5 +149,18 @@ public class AttendanceController {
 
 		return "attendance/detail";
 	}
+	
+	@RequestMapping(path = "/countLmsUserId",method = RequestMethod.POST)
+	public String countLmsUserId(Model model) {
+		
+		boolean st = studentAttendanceService.countLmsUserId();
+		
+		model.addAttribute("hasUnentered",st);
+		
+		
+		return "attendance/detail";
+	}
+	
+	
 
 }
