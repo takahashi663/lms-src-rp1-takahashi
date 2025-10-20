@@ -50,6 +50,9 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		
+		//サービスクラスのcountLmsUserId()を呼び出す
+		boolean result = studentAttendanceService.countLmsUserId();
+		model.addAttribute("Unentered",result);//Unentered＝未入力
 		
 		return "attendance/detail";
 	}
@@ -150,16 +153,7 @@ public class AttendanceController {
 		return "attendance/detail";
 	}
 	
-	@RequestMapping(path = "/countLmsUserId",method = RequestMethod.POST)
-	public String countLmsUserId(Model model) {
-		
-		boolean st = studentAttendanceService.countLmsUserId();
-		
-		model.addAttribute("hasUnentered",st);
-		
-		
-		return "attendance/detail";
-	}
+
 	
 	
 

@@ -85,13 +85,13 @@
 			blank_time = #{blankTime}
 		WHERE student_attendance_id = #{studentAttendanceId}
 	</update>
-	<select id="countLmsUserId" resultType="jp.co.sss.lms.entity.TStudentAttendance">
+	<select id="countLmsUserId" resultType="int">
 	
 	SELECT COUNT(*)
 	FROM t_student_attendance
 	WHERE lms_user_id = #{lmsUserId}
-	AND trainingDate
-	AND status !=1
+	AND training_date::date &lt; CURRENT_DATE
+	AND status IS NULL OR status != 1
 	AND (training_start_time IS NULL OR training_end_time IS NULL)
 	AND delete_flg = 0
 	

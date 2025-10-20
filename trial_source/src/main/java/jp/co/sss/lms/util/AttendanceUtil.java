@@ -85,6 +85,8 @@ public class AttendanceUtil {
 		TrainingTime total = new TrainingTime(hour, minute);
 		return total;
 	}
+	
+	
 
 	/**
 	 * 時刻分を丸めた本日日付を取得

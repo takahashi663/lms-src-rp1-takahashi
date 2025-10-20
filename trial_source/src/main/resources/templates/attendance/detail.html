@@ -7,16 +7,16 @@
 </head>
 <body>
 	
-<form id="attendanceForm">
-	<input type="hidden" id="hasUnentered" name="hasUnentered" th:value="${hasUnentered}">
+<form action="@{Unentered}">
+	<input type="hidden" id="Unentered" name="Unentered" th:value="${Unentered}">
 </form>
 
 <script>
-  console.log("JSは実行されています");
+ 
   window.addEventListener('load', () => {
-    console.log("loadイベント発火");
-    const hiddenValue = document.getElementById('hasUnentered').value;
-    console.log("hiddenValue =", hiddenValue);
+  
+    const hiddenValue = document.getElementById('Unentered').value;
+   
     if (hiddenValue === 'true') {
       alert("過去日に未入力の勤怠があります。");
     }

@@ -66,6 +66,7 @@ public interface TStudentAttendanceMapper {
 	Boolean update(TStudentAttendance tStudentAttendance);
 
 	
+	//勤怠情報（受講生入力）取得（LMSユーザーID＆日付）してカウント
 	Integer countLmsUserId(@Param("lmsUserId") Integer lmsUserId,
 			@Param("trainingDate") Date trainingDate, @Param("deleteFlg") Short deleteFlg);
 
