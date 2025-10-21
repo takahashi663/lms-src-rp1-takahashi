@@ -3,6 +3,7 @@ package jp.co.sss.lms.service;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -236,14 +237,28 @@ public class StudentAttendanceService {
 					.setStudentAttendanceId(attendanceManagementDto.getStudentAttendanceId());
 			dailyAttendanceForm
 					.setTrainingDate(dateUtil.toString(attendanceManagementDto.getTrainingDate()));
-			dailyAttendanceForm
-					.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
+		
 			dailyAttendanceForm.setTrainingEndTime(attendanceManagementDto.getTrainingEndTime());
 			if (attendanceManagementDto.getBlankTime() != null) {
 				dailyAttendanceForm.setBlankTime(attendanceManagementDto.getBlankTime());
 				dailyAttendanceForm.setBlankTimeValue(String.valueOf(
 						attendanceUtil.calcBlankTime(attendanceManagementDto.getBlankTime())));
 			}
+			String start = attendanceManagementDto.getTrainingStartTime();
+			if(start != null && !start.isEmpty()) {
+				dailyAttendanceForm.setTrainingStartTime(start);
+				
+				TrainingTime trainingTime = attendanceUtil.clacTrainingStartTime(start);
+				if(trainingTime !=null) {
+					String formattedTime = String.format("%02d:%02d", trainingTime.getHour(), trainingTime.getMinute());
+			        dailyAttendanceForm.setTrainingStartTimeValue(formattedTime);
+			    
+				}
+				
+			}
+	
+			
+			
 			dailyAttendanceForm.setStatus(String.valueOf(attendanceManagementDto.getStatus()));
 			dailyAttendanceForm.setNote(attendanceManagementDto.getNote());
 			dailyAttendanceForm.setSectionName(attendanceManagementDto.getSectionName());
@@ -254,10 +269,37 @@ public class StudentAttendanceService {
 
 			attendanceForm.getAttendanceList().add(dailyAttendanceForm);
 		}
-
+		
+		attendanceForm.setHourList(createTrainingStartTimeMapHour());
+		attendanceForm.setMinuteList(createTrainingStartTimeMapMinute());
 		return attendanceForm;
 	}
+	
+	//出勤時間リストを作成
+	private LinkedHashMap<Integer, String> createTrainingStartTimeMapHour() {
+	    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+	    map.put(null, "");
+	    for (int h = 0; h <= 24; h++) {
+	     
+	            
+	            map.put(h, String.format("%02d", h));
+	          
+	        }
+	    return map;
+	    }
+	   
 
+	private LinkedHashMap<Integer, String> createTrainingStartTimeMapMinute() {
+	    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+	    map.put(null, "");
+	        for (int m = 0; m < 60; m += 1) {
+	        
+	            map.put(m,String.format("%02d",m));
+	        }
+	        return map;
+	}
+
+	
 	/**
 	 * 勤怠登録・更新処理
 	 * 
@@ -337,10 +379,10 @@ public class StudentAttendanceService {
 		
 	}
 	//勤怠情報（受講生入力）取得（LMSユーザーID＆日付）してカウント
-	public boolean countLmsUserId(){
-		Date trainingDate = attendanceUtil.getTrainingDate();
-		Integer result = tStudentAttendanceMapper.countLmsUserId(loginUserDto.getLmsUserId(), trainingDate,
-				Constants.DB_FLG_FALSE);
+	public boolean notEnterCount(){
+		Date trainingDate = new Date();
+		Integer result = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(), Constants.DB_FLG_FALSE,
+				trainingDate);
 	return result != null && result> 0;
 	
 	}

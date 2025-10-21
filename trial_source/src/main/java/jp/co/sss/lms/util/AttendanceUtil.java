@@ -85,8 +85,24 @@ public class AttendanceUtil {
 		TrainingTime total = new TrainingTime(hour, minute);
 		return total;
 	}
-	
-	
+	//出勤時間を時(hour)と分(minute)に変換
+	public TrainingTime clacTrainingStartTime(String min){
+		int totalMinutes = Integer.parseInt(min);
+		
+		 int hour = totalMinutes / 60;
+		 int minute =  totalMinutes % 60;
+		TrainingTime total = new TrainingTime(hour, minute);
+		return total;
+	}
+	//退勤時間を時(hour)と分(minute)に変換
+	public TrainingTime clacTrainingEndTime(String min){
+		int totalMinutes = Integer.parseInt(min);
+		
+		 int hour = totalMinutes / 60;
+		 int minute =  totalMinutes % 60;
+		TrainingTime total = new TrainingTime(hour, minute);
+		return total;
+	}
 
 	/**
 	 * 時刻分を丸めた本日日付を取得
@@ -149,4 +165,5 @@ public class AttendanceUtil {
 		return false;
 	}
 
+	
 }

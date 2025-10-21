@@ -51,7 +51,7 @@ public class AttendanceController {
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		
 		//サービスクラスのcountLmsUserId()を呼び出す
-		boolean result = studentAttendanceService.countLmsUserId();
+		boolean result = studentAttendanceService.notEnterCount();
 		model.addAttribute("Unentered",result);//Unentered＝未入力
 		
 		return "attendance/detail";
