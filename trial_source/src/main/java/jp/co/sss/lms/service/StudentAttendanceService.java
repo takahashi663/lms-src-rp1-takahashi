@@ -244,19 +244,30 @@ public class StudentAttendanceService {
 				dailyAttendanceForm.setBlankTimeValue(String.valueOf(
 						attendanceUtil.calcBlankTime(attendanceManagementDto.getBlankTime())));
 			}
-			String start = attendanceManagementDto.getTrainingStartTime();
-			if(start != null && !start.isEmpty()) {
-				dailyAttendanceForm.setTrainingStartTime(start);
-				
-				TrainingTime trainingTime = attendanceUtil.clacTrainingStartTime(start);
-				if(trainingTime !=null) {
-					String formattedTime = String.format("%02d:%02d", trainingTime.getHour(), trainingTime.getMinute());
-			        dailyAttendanceForm.setTrainingStartTimeValue(formattedTime);
-			    
-				}
-				
-			}
-	
+//			String start = attendanceManagementDto.getTrainingStartTime();
+//		if(start != null && !start.isEmpty()) {
+//			dailyAttendanceForm.setTrainingStartTime(start);
+//			
+//				TrainingTime trainingTimeStart = attendanceUtil.clacTrainingStartTime(start);
+//				if(trainingTimeStart !=null) {
+//				String formattedTime = String.format("%02d:%02d", trainingTimeStart.getHour(), trainingTimeStart.getMinute());
+//		      dailyAttendanceForm.setTrainingStartTimeValue(formattedTime);
+//			    
+//				}
+//				
+//				String end = attendanceManagementDto.getTrainingStartTime();
+//			if(end != null && !end.isEmpty()) {
+//					dailyAttendanceForm.setTrainingStartTime(start);
+//			}
+//					TrainingTime trainingTimeEnd = attendanceUtil.clacTrainingStartTime(start);
+//					if(trainingTimeEnd !=null) {
+//						String formattedTime = String.format("%02d:%02d", trainingTimeEnd.getHour(), trainingTimeEnd.getMinute());
+//				       dailyAttendanceForm.setTrainingStartTimeValue(formattedTime);
+//				    
+//					}
+//				
+//			}
+//	
 			
 			
 			dailyAttendanceForm.setStatus(String.valueOf(attendanceManagementDto.getStatus()));
@@ -269,13 +280,19 @@ public class StudentAttendanceService {
 
 			attendanceForm.getAttendanceList().add(dailyAttendanceForm);
 		}
+	
 		
-		attendanceForm.setHourList(createTrainingStartTimeMapHour());
-		attendanceForm.setMinuteList(createTrainingStartTimeMapMinute());
-		return attendanceForm;
-	}
+//		attendanceForm.setStartHourList(createTrainingStartTimeMapHour());
+//		attendanceForm.setStartMinuteList(createTrainingStartTimeMapMinute());
+//		attendanceForm.setEndHourList(createTrainingEndTimeMapHour());
+//		attendanceForm.setEndMinuteList(createTrainingEndTimeMapMinute());
+			
+	return attendanceForm;
+	
+		}		
 	
 	//出勤時間リストを作成
+	//出勤:時間
 	private LinkedHashMap<Integer, String> createTrainingStartTimeMapHour() {
 	    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
 	    map.put(null, "");
@@ -288,7 +305,7 @@ public class StudentAttendanceService {
 	    return map;
 	    }
 	   
-
+	//出勤:分
 	private LinkedHashMap<Integer, String> createTrainingStartTimeMapMinute() {
 	    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
 	    map.put(null, "");
@@ -298,6 +315,30 @@ public class StudentAttendanceService {
 	        }
 	        return map;
 	}
+	
+	//時間
+		private LinkedHashMap<Integer, String> createTrainingEndTimeMapHour() {
+		    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+		    map.put(null, "");
+		    for (int h = 0; h <= 24; h++) {
+		     
+		            
+		            map.put(h, String.format("%02d", h));
+		          
+		        }
+		    return map;
+		    }
+		   
+		//分
+		private LinkedHashMap<Integer, String> createTrainingEndTimeMapMinute() {
+		    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+		    map.put(null, "");
+		        for (int m = 0; m < 60; m += 1) {
+		        
+		            map.put(m,String.format("%02d",m));
+		        }
+		        return map;
+		}
 
 	
 	/**
@@ -386,7 +427,55 @@ public class StudentAttendanceService {
 	return result != null && result> 0;
 	
 	}
+	
+	// 文字列結合：フォームからの送信前に呼ぶ
+	
+	
+	
+	
+	
+	
+	
+//	public DailyAttendanceForm combineTrainingTimes(DailyAttendanceForm form) {
+//	    // 出勤時間の結合
+//	    String startHour = form.getTrainingStartTimeHour();
+//	    String startMinute = form.getTrainingStartTimeMinute();
+//	    if (startHour != null && !startHour.isEmpty() && startMinute != null && !startMinute.isEmpty()) {
+//	        // 整数に変換して 2 桁表示で結合
+//	        form.setTrainingStartTime(String.format("%02d:%02d",
+//	                Integer.parseInt(startHour),
+//	                Integer.parseInt(startMinute)));
+//	    } else {
+//	        form.setTrainingStartTime(null); // 入力がなければ null
+//	    }
+//
+//	    // 退勤時間の結合
+//	    String endHour = form.getTrainingEndTimeHour();
+//	    String endMinute = form.getTrainingEndTimeMinute();
+//	    if (endHour != null && !endHour.isEmpty() && endMinute != null && !endMinute.isEmpty()) {
+//	        form.setTrainingEndTime(String.format("%02d:%02d",
+//	                Integer.parseInt(endHour),
+//	                Integer.parseInt(endMinute)));
+//	    } else {
+//	        form.setTrainingEndTime(null);
+//	    }
+//
+//	    return form;
+//	}
+
+    // ここに update() や getAttendanceManagement() の既存処理が入る
 }
+
+	
+
+
+
+
+
+
+
+
+
 
 	
 			

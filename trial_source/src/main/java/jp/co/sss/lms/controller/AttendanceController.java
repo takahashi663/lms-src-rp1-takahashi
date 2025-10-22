@@ -141,13 +141,23 @@ public class AttendanceController {
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
-
-		// 更新
+//		for (DailyAttendanceForm dailyForm : attendanceForm.getAttendanceList()){
+//			studentAttendanceService.splitTrainingTimes(dailyForm);
+//		 studentAttendanceService.combineTrainingTimes(dailyForm);
+	
+		
+		
+	//	}
+		 //更新
 		String message = studentAttendanceService.update(attendanceForm);
 		model.addAttribute("message", message);
 		// 一覧の再取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
+		
+	    // 各フォームを hour/minute に分割
+	   
+	
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
 		return "attendance/detail";
