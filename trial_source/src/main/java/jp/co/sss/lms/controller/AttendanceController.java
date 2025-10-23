@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.form.AttendanceForm;
+import jp.co.sss.lms.form.DailyAttendanceForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
 import jp.co.sss.lms.util.Constants;
-
-
 
 /**
  * 勤怠管理コントローラ
@@ -31,7 +30,6 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
-	
 
 	/**
 	 * 勤怠管理画面 初期表示
@@ -49,15 +47,13 @@ public class AttendanceController {
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
-		
+
 		//サービスクラスのcountLmsUserId()を呼び出す
 		boolean result = studentAttendanceService.notEnterCount();
-		model.addAttribute("Unentered",result);//Unentered＝未入力
-		
+		model.addAttribute("Unentered", result);//Unentered＝未入力
+
 		return "attendance/detail";
 	}
-	
-	
 
 	/**
 	 * 勤怠管理画面 『出勤』ボタン押下
@@ -141,30 +137,21 @@ public class AttendanceController {
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
-//		for (DailyAttendanceForm dailyForm : attendanceForm.getAttendanceList()){
-//			studentAttendanceService.splitTrainingTimes(dailyForm);
-//		 studentAttendanceService.combineTrainingTimes(dailyForm);
-	
-		
-		
-	//	}
-		 //更新
+		for (DailyAttendanceForm dailyForm : attendanceForm.getAttendanceList()) {
+			studentAttendanceService.combineTrainingTimes(dailyForm);
+
+		}
+
+		//更新
 		String message = studentAttendanceService.update(attendanceForm);
 		model.addAttribute("message", message);
 		// 一覧の再取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
-		
-	    // 各フォームを hour/minute に分割
-	   
-	
+
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
 		return "attendance/detail";
 	}
-	
-
-	
-	
 
 }
