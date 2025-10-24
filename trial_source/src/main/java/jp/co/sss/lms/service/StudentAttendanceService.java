@@ -1,6 +1,7 @@
 package jp.co.sss.lms.service;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -421,4 +422,67 @@ public class StudentAttendanceService {
 
 		return form;
 	}
+	
+	public List<String> validateAttebdance(AttendanceForm form) throws ParseException{
+		List<String> errorMessages = new ArrayList<>();
+		
+		int index = 1; //n番目特定
+		
+		for(DailyAttendanceForm daily : form.getAttendanceList()) {
+			
+			//備考の文字数チェック
+			if(daily.getNote() != null && daily.getNote().length() > 100) {
+	
+			}
+			
+			boolean hasStartHour = daily.getTrainingStartTimeHour() != null && !daily.getTrainingStartTimeHour().isEmpty();
+			boolean hasStartMinute = daily.getTrainingEndTimeMinute() !=null && !daily.getTrainingStartTimeMinute().isEmpty();
+			if(hasStartHour ^ hasStartMinute) {
+				errorMessages.add(String.format("(%d件目)出勤時間が正しく入力されていません。",index));
+				
+			}
+			boolean hasEndHour = daily.getTrainingEndTimeHour() != null && !daily.getTrainingEndTimeHour().isEmpty();
+			boolean hasEndMinute = daily.getTrainingEndTimeMinute() != null && !daily.getTrainingEndTimeMinute().isEmpty();
+			if(hasEndHour ^ hasEndMinute) {
+				errorMessages.add(String.format("(%d件目)出勤時間が正しく入力されていません",index));
+			}
+			if(!hasStartHour && !hasStartMinute && (hasEndHour || hasEndMinute)) {
+				errorMessages.add(String.format("(%d件目)退勤時間が未入力の状態で退勤時間が入力されています。",index));
+			}
+			if(hasStartHour && hasStartMinute && hasEndHour && hasEndMinute)  {
+				String start = daily.getTrainingStartTimeHour() + ":" + daily.getTrainingEndTimeMinute();
+				String end =daily.getTrainingEndTimeHour() + ":" + daily.getTrainingEndTimeMinute();
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+				Date startTime = sdf.parse(start);
+				Date endTime = sdf.parse(end);
+				
+				if(startTime.after(endTime)) {
+					errorMessages.add(String.format("(%d件目)出勤時間が退勤時間を超えています。",index));
+					
+					}
+				
+				
+				}
+			if(hasStartHour && hasStartMinute && hasEndHour && hasEndMinute && daily.getBlankTime() != null) {
+				String start = daily.getTrainingStartTimeHour() + ":" + daily.getTrainingStartTimeMinute();
+				String end =daily.getTrainingEndTimeHour() + ":" + daily.getTrainingEndTimeMinute();
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+				Date startTime = sdf.parse(start);
+				Date endTime = sdf.parse(end);
+				
+				long workMinute = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
+				int blankMinute = daily.getBlankTime();
+				
+				if(blankMinute > workMinute) {
+					errorMessages.add(String.format("(%d件目)中抜け時間が勤務時間を超えています。",index));
+				}
+			}
+			index++;
+		}
+		
+		return errorMessages;
+	}
+	
 }
