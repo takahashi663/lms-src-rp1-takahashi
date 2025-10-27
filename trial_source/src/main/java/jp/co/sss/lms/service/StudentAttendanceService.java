@@ -1,7 +1,6 @@
 package jp.co.sss.lms.service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -423,66 +422,118 @@ public class StudentAttendanceService {
 		return form;
 	}
 	
-	public List<String> validateAttebdance(AttendanceForm form) throws ParseException{
-		List<String> errorMessages = new ArrayList<>();
-		
-		int index = 1; //n番目特定
-		
-		for(DailyAttendanceForm daily : form.getAttendanceList()) {
-			
-			//備考の文字数チェック
-			if(daily.getNote() != null && daily.getNote().length() > 100) {
+//	public List<String> validateAttebdance(AttendanceForm form) throws ParseException{
+//		List<String> errorMessages = new ArrayList<>();
+//		
+//		int index = 1; //n番目特定
+//		
+//		for(DailyAttendanceForm daily : form.getAttendanceList()) {
+//			
+//			//備考の文字数チェック
+//			if(daily.getNote() != null && daily.getNote().length() > 100) {
+//				String msg = messageUtil.getMessage("maxlength", new String[] {"備考","100"});
+//				errorMessages.add(msg);
+//			}
+//			//出勤時間の一部未入力
+//			boolean hasStartHour = daily.getTrainingStartTimeHour() != null && !daily.getTrainingStartTimeHour().isEmpty();
+//			boolean hasStartMinute = daily.getTrainingEndTimeMinute() !=null && !daily.getTrainingStartTimeMinute().isEmpty();
+//			if((hasStartHour && !hasStartMinute) || (!hasStartHour && hasStartMinute)) {
+//			
+//				String msg = messageUtil.getMessage("input.invalid" , new String[] {"出勤時間"});
+//				errorMessages.add(msg);
+//				
+//			}
+//			
+//			//退勤時間の一部未入力
+//			boolean hasEndHour = daily.getTrainingEndTimeHour() != null && !daily.getTrainingEndTimeHour().isEmpty();
+//			boolean hasEndMinute = daily.getTrainingEndTimeMinute() != null && !daily.getTrainingEndTimeMinute().isEmpty();
+//			if((hasEndHour && !hasEndMinute) || (!hasEndHour && hasEndMinute)) {
+//				String msg = messageUtil.getMessage("input.invalid" , new String[] {"退勤時間"});
+//				errorMessages.add(msg);
+//			}
+//			
+//			//出勤なし 退勤あり
+//			if(!hasStartHour && !hasStartMinute && (hasEndHour || hasEndMinute)) {
+//				String msg = messageUtil.getMessage("attendance.punchInEmpty");
+//				errorMessages.add(msg);
+//			}
+//			
+//			//出勤が退勤より多い
+//			if(hasStartHour && hasStartMinute && hasEndHour && hasEndMinute)  {
+//				try {
+//					SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+//					Date strat = sdf.parse(daily.getTrainingStartTimeHour() + ":" + daily.getTrainingStartTimeMinute());
+//					Date end = sdf.parse(daily.getTrainingEndTimeHour() + ":" + daily.getTrainingEndTimeMinute());
+//				if(strat.after(end)) {
+//					String msg = messageUtil.getMessage("attendance.trainingTimeRange",new String[] {String.valueOf(index)});
+//					errorMessages.add(msg);
+//				}
+//				}catch(ParseException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//				
+//			//中抜け時間が勤務時間を超える
+//			if(hasStartHour && hasStartMinute && hasEndHour && hasEndMinute && daily.getBlankTime() != null) {
+//				try {
+//					SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+//					Date strat = sdf.parse(daily.getTrainingStartTimeHour() + ":" + daily.getTrainingStartTimeMinute());
+//					Date end = sdf.parse(daily.getTrainingEndTimeHour() + ":" + daily.getTrainingEndTimeMinute());
+//					long workMinutes =(end.getTime() - strat.getTime()) / (1000 * 60);
+//					int blankMinutes = daily.getBlankTime();
+//					
+//					if(blankMinutes > workMinutes) {
+//						String msg = messageUtil.getMessage("attendance.blankTimeError");
+//						errorMessages.add(msg);
+//					}
+//				}catch(ParseException e) {
+//					e.printStackTrace();
+//				}
+//				}
+//			index++;
+//			}
+
+
 	
-			}
-			
-			boolean hasStartHour = daily.getTrainingStartTimeHour() != null && !daily.getTrainingStartTimeHour().isEmpty();
-			boolean hasStartMinute = daily.getTrainingEndTimeMinute() !=null && !daily.getTrainingStartTimeMinute().isEmpty();
-			if(hasStartHour ^ hasStartMinute) {
-				errorMessages.add(String.format("(%d件目)出勤時間が正しく入力されていません。",index));
-				
-			}
-			boolean hasEndHour = daily.getTrainingEndTimeHour() != null && !daily.getTrainingEndTimeHour().isEmpty();
-			boolean hasEndMinute = daily.getTrainingEndTimeMinute() != null && !daily.getTrainingEndTimeMinute().isEmpty();
-			if(hasEndHour ^ hasEndMinute) {
-				errorMessages.add(String.format("(%d件目)出勤時間が正しく入力されていません",index));
-			}
-			if(!hasStartHour && !hasStartMinute && (hasEndHour || hasEndMinute)) {
-				errorMessages.add(String.format("(%d件目)退勤時間が未入力の状態で退勤時間が入力されています。",index));
-			}
-			if(hasStartHour && hasStartMinute && hasEndHour && hasEndMinute)  {
-				String start = daily.getTrainingStartTimeHour() + ":" + daily.getTrainingEndTimeMinute();
-				String end =daily.getTrainingEndTimeHour() + ":" + daily.getTrainingEndTimeMinute();
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-				Date startTime = sdf.parse(start);
-				Date endTime = sdf.parse(end);
-				
-				if(startTime.after(endTime)) {
-					errorMessages.add(String.format("(%d件目)出勤時間が退勤時間を超えています。",index));
-					
-					}
-				
-				
-				}
-			if(hasStartHour && hasStartMinute && hasEndHour && hasEndMinute && daily.getBlankTime() != null) {
-				String start = daily.getTrainingStartTimeHour() + ":" + daily.getTrainingStartTimeMinute();
-				String end =daily.getTrainingEndTimeHour() + ":" + daily.getTrainingEndTimeMinute();
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-				Date startTime = sdf.parse(start);
-				Date endTime = sdf.parse(end);
-				
-				long workMinute = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
-				int blankMinute = daily.getBlankTime();
-				
-				if(blankMinute > workMinute) {
-					errorMessages.add(String.format("(%d件目)中抜け時間が勤務時間を超えています。",index));
-				}
-			}
-			index++;
-		}
-		
-		return errorMessages;
+	public String validateAttendance(DailyAttendanceForm dailyForm) {
+		String startHour = dailyForm.getTrainingStartTimeHour();
+		String startMinute = dailyForm.getTrainingStartTimeMinute();
+		String endHour = dailyForm.getTrainingEndTimeHour();
+		String endMinute = dailyForm.getTrainingEndTimeMinute();
+	
+	
+	//出勤時間入力チェック
+	if((startHour != null && !startHour.isEmpty()) && (startMinute == null || startMinute.isEmpty())) {
+		return messageUtil.getMessage(Constants.VALID_KEY_INVALID,new String[]{"出勤時間"});
 	}
+	if((startMinute != null && !startMinute.isEmpty()) && (startHour == null || startHour.isEmpty())) {
+		return messageUtil.getMessage(Constants.VALID_KEY_INVALID,new String[]{"退勤時間"});
+		
+		}
+	
+	//退勤時間入力チェック
+	if((endHour != null && !endHour.isEmpty()) && (endMinute == null || endMinute.isEmpty())) {
+		return messageUtil.getMessage("end.invalid");
+	}
+	if((endMinute != null && !endMinute.isEmpty()) && (endHour == null || endHour.isEmpty())) {
+		return messageUtil.getMessage("end.invalid");
+	}
+	//出退勤の前後関係チェック
+	if(startHour != null && !startHour.isEmpty() && 
+		startMinute !=null && !startMinute.isEmpty() &&
+		endHour !=null && !endHour.isEmpty() &&
+		endMinute != null && !endMinute.isEmpty()) {
+		
+		int startTotal = Integer.parseInt(startHour) * 60 + Integer.parseInt(startMinute);
+		int endTotal = Integer.parseInt(endHour) * 60 + Integer.parseInt(endMinute);
+		
+		if(endTotal < startTotal) {
+			return messageUtil.getMessage("input.invalid");
+		}
+	}
+	return null; //エラーなし
+	
+	}
+	
 	
 }

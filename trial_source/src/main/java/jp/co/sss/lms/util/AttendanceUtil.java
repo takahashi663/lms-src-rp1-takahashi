@@ -125,7 +125,7 @@ public class AttendanceUtil {
 	 * 
 	 * @return 休憩時間
 	 */
-	public LinkedHashMap<Integer, String> setBlankTime() {
+	public static LinkedHashMap<Integer, String> setBlankTime() {
 		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
 		map.put(null, "");
 		for (int i = 15; i < 480;) {
@@ -165,5 +165,30 @@ public class AttendanceUtil {
 		return false;
 	}
 
+	/**
+	出勤・退勤時間の「時」選択肢マップを返す（5分刻み）
+	 */
+	
+	public static  LinkedHashMap<Integer, String> getHourMap() {
+	    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+	    map.put(null, "");
+	    for (int i = 0; i <= 23; i++) {
+	        map.put(i, String.format("%02d", i));
+	    }
+	    return map;
+	}
+
+	/**
+	出勤・退勤時間の「分」選択肢マップを返す（5分刻み）
+	 */
+	public static LinkedHashMap<Integer, String> getMinuteMap() {
+	    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+	    map.put(null, "");
+	    for (int i = 0; i < 60; i += 5) {
+	        map.put(i, String.format("%02d", i));
+	    }
+	    return map;
+	}
+	
 	
 }

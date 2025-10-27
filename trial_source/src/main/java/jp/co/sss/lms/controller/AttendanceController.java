@@ -137,10 +137,22 @@ public class AttendanceController {
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
+		
+		
 		for (DailyAttendanceForm dailyForm : attendanceForm.getAttendanceList()) {
 			studentAttendanceService.combineTrainingTimes(dailyForm);
-
+			//入力チェック
+			String errorMessage = studentAttendanceService.validateAttendance(dailyForm);
+			if (errorMessage != null) {
+				model.addAttribute("errorMessage",errorMessage);
+				model.addAttribute("attendanceForm",attendanceForm);
+				return "attendance/detail";//エラー時は画面に戻る
+			}
+			studentAttendanceService.combineTrainingTimes(dailyForm);
 		}
+		
+		
+		
 
 		//更新
 		String message = studentAttendanceService.update(attendanceForm);

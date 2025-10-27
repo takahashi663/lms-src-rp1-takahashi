@@ -8,6 +8,14 @@
 
 <body>
 
+
+
+
+
+
+
+
+
 	<th:block th:if="${session.loginUserDto.role == '0001'}">
 		<h2>勤怠管理</h2>
 	</th:block>
@@ -131,7 +139,10 @@
 						<input type="submit" value="戻る" name="indexCompany" class="btn btn-default" />
 					</th:block>
 					<input type="submit" value="更新" name="complete" class="btn btn-info" />
+					
 				</div>
+				<div th:if="${errorMessage}" class="alert-danger" th:text="${errorMessage}"></div>
+				<div th:if="${message}" class="alert aleat-success" th:text="${message}"></div>
 
 			</form>
 		</div>
